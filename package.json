@@ -1,0 +1,12 @@
+{
+  "name": "iphone-stock-manager",
+  "version": "1.0.0",
+  "description": "Fullstack iPhone Stock Manager with Next.js and NestJS",
+  "scripts": {
+    "backend:dev": "npm --prefix backend run start:dev",
+    "frontend:dev": "npm --prefix frontend run dev",
+    "backend:build": "npm --prefix backend run build",
+    "frontend:build": "npm --prefix frontend run build"
+  }
+}
+
