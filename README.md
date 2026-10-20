@@ -48,14 +48,19 @@ Aplikasi manajemen stok, barang masuk/keluar, transaksi penjualan, dan laporan k
 
 - **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS, Lucide Icons
 - **Backend**: NestJS 10, TypeScript, Prisma ORM, class-validator
-- **Database**: SQLite (`dev.db` via Prisma)
+- **Database**: PostgreSQL via Prisma
 
 ---
 
 ## 💻 Cara Menjalankan
 
+Backend sekarang menggunakan PostgreSQL. Siapkan database PostgreSQL dan atur
+`DATABASE_URL` serta `JWT_SECRET` sebelum menjalankan backend.
+`JWT_SECRET` harus memiliki minimal 32 byte.
+
 ### Opsi 1: Menjalankan Langsung dengan Script
-Jalankan file batch:
+Atur `DATABASE_URL` ke URL database PostgreSQL terlebih dahulu, lalu jalankan
+file batch:
 ```bash
 # Di root folder iphone-stock-manager
 start-all.bat
@@ -68,15 +73,14 @@ Jika `JWT_SECRET` belum ditetapkan di environment, script membuat secret acak se
 ```bash
 cd backend
 npm install
-npx prisma db push
-npx ts-node prisma/seed.ts   # (Opsional) untuk mengisi data awal contoh
-# Buat secret dengan `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"`
-# lalu atur nilainya di PowerShell; gunakan kembali nilai yang sama setiap backend dijalankan.
+$env:DATABASE_URL = '<URL-PostgreSQL>'
 $env:JWT_SECRET = '<secret-acak-minimal-32-byte-yang-disimpan-aman>'
+npx prisma db push
 npm run start:dev
 ```
 Backend berjalan di: `http://localhost:3000` (API di `http://localhost:3000/api`)
-`JWT_SECRET` wajib diatur untuk menjalankan backend dan harus memiliki minimal 32 byte. Simpan secret konfigurasi ini dengan aman dan gunakan nilai yang sama saat backend dimulai kembali.
+`DATABASE_URL` menunjuk ke database PostgreSQL yang digunakan aplikasi. Simpan
+`JWT_SECRET` dengan aman dan gunakan nilai yang sama setelah backend dimulai ulang.
 
 #### 2. Jalankan Frontend (Next.js - Port 3001)
 ```bash
@@ -87,3 +91,20 @@ npm run dev
 Buka browser di: `http://localhost:3001`
 *(Frontend otomatis mem-proxy request `/api/*` ke backend NestJS di port 3000)*
 Buat akun melalui halaman **Register** atau login melalui halaman **Login**.
+
+## Deploy ke Vercel
+
+Repository ini mengonfigurasi dua Vercel services di `vercel.json`: frontend
+Next.js dan backend NestJS. Pastikan variabel berikut tersedia untuk service
+backend pada Production (dan Preview bila diperlukan):
+
+- `DATABASE_URL`: URL PostgreSQL yang dapat diakses dari Vercel.
+- `JWT_SECRET`: secret acak minimal 32 byte, disimpan sebagai environment
+  variable rahasia Vercel.
+
+Deploy schema ke database PostgreSQL sebelum menerima trafik dengan
+`npx prisma db push` dari folder `backend`, menggunakan `DATABASE_URL` yang
+tepat. Periksa schema/database tujuan terlebih dahulu; jangan jalankan perintah
+ini pada database berisi data penting tanpa meninjau dampaknya. Setelah kedua
+service terhubung, rewrite `/api/*` diarahkan ke backend dan route lain ke
+frontend.

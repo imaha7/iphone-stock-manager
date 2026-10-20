@@ -10,6 +10,10 @@ if not defined JWT_SECRET (
   echo Gagal membuat JWT_SECRET. Pastikan Node.js terpasang atau atur JWT_SECRET secara manual.
   exit /b 1
 )
+if not defined DATABASE_URL (
+  echo DATABASE_URL belum diatur. Atur URL database PostgreSQL sebelum menjalankan aplikasi.
+  exit /b 1
+)
 
 echo Memulai Backend (NestJS di port 3000)...
 start "NestJS Backend" cmd /k "cd /d %~dp0backend && npm run start:dev"
