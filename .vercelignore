@@ -1,0 +1,4 @@
+backend/prisma/dev.db
+backend/dist
+backend/tsconfig.tsbuildinfo
+frontend/tsconfig.tsbuildinfo
