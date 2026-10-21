@@ -108,3 +108,5 @@ tepat. Periksa schema/database tujuan terlebih dahulu; jangan jalankan perintah
 ini pada database berisi data penting tanpa meninjau dampaknya. Setelah kedua
 service terhubung, rewrite `/api/*` diarahkan ke backend dan route lain ke
 frontend.
+
+Created by - @imaha7
